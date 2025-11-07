@@ -1,0 +1,77 @@
+
+prompts:
+  Scope & Reusability:
+    template: >
+      Based on the provided document, does the solution offer reusable frameworks, services, or APIs that multiple teams or applications can build upon?
+
+  Ecosystem Enablement:
+    template: >
+      Does the solution enable third parties or internal users to build on top of it, rather than just consume it? Look for signs of extensibility, marketplaces, or plugin ecosystems.
+
+  Multi-Use-Case Support:
+    template: >
+      Can the platform support multiple applications or use cases from the same foundation? Identify if the architecture supports varied business processes.
+
+  Scalability & Resilience:
+    template: >
+      Is there a requirement for the platform to scale to support increasing users, applications, or data volumes while maintaining resilience? Look for mentions of autoscaling, load balancing, or HA.
+
+  Multi-Tenant / Shared Model:
+    template: >
+      Does the solution support secure, isolated use by multiple tenants or customers on shared infrastructure? Look for multi-tenant architecture or shared resource models.
+
+  Interoperability:
+    template: >
+      Does the platform need to integrate with external or internal systems via APIs, connectors, or other interfaces? Identify any references to ERP, CRM, or legacy system integration.
+
+  Migration Readiness:
+    template: >
+      Is there scope for infrastructure transformation like cloud migration or replatforming? Look for mentions of lift-and-shift, IaC, or modernization efforts.
+
+  Observability & Telemetry:
+    template: >
+      Are metrics, logs, traces, and dashboards required for platform visibility? Look for references to monitoring tools like Prometheus, Grafana, or OpenTelemetry.
+
+  Extensible APIs & Webhooks:
+    template: >
+      Does the platform expose APIs, SDKs, or webhooks for extensions or automation? Look for OpenAPI specs, webhook events, or SDK generation.
+
+  Developer Experience:
+    template: >
+      Is the platform designed for internal or external developers to self-serve efficiently? Look for developer portals, CI/CD pipelines, or onboarding tools.
+
+  Security & Compliance:
+    template: >
+      Must the platform provide shared security features for built-on apps? Look for authentication, audit logging, or regulatory compliance requirements.
+
+  Cross-Domain Applicability:
+    template: >
+      Is the platform usable across different business units or domains? Look for shared services or infrastructure used by multiple departments.
+
+  Customer's Business Model:
+    template: >
+      Is the solution aligned with a SaaS or ISV model, intended to be sold or licensed for building on top of? Look for multi-tenant SaaS architecture or partner enablement.
+
+  Flexibility & Customization:
+    template: >
+      Does the system need to be highly flexible and customizable to meet varying customer requirements? Look for rule engines, no-code builders, or feature flags.
+
+  Ease of Use / Onboarding:
+    template: >
+      Can new developers or customers get started quickly via documentation, CLI tools, quickstarts, or sandboxes? Look for onboarding accelerators.
+
+  Governance & Policy:
+    template: >
+      Are controls needed to enforce compliance, access, and usage across tenants or modules? Look for policy enforcement mechanisms or audit trails.
+
+  Upgradeability & Versioning:
+    template: >
+      Does the platform require backward-compatible upgrades and controlled deprecations? Look for versioning strategies or rolling update mechanisms.
+
+  Abstracts Complexity:
+    template: >
+      Does the platform hide complex infrastructure or workflows to simplify developer or user experience? Look for orchestration layers or PaaS interfaces.
+
+  Standardization Enabler:
+    template: >
+      Will the platform help unify development practices or architecture across teams? Look for shared pipelines, templates, or service mesh policies.

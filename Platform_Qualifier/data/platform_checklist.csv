@@ -1,0 +1,82 @@
+Checklist to identify Platform Engineering Category,Unnamed: 1,Unnamed: 2,Unnamed: 3,Unnamed: 4,Unnamed: 5,Unnamed: 6,Unnamed: 7,Unnamed: 8
+,,,,,,,,
+Project/Opportunity Name,,,,,,,,
+,,,,,,,,
+Scoring Scale (per Criterion),,,Weight (W),,,,,
+Score,Meaning,,Weight Range,Interpretation,,Explanation,,
+0,Not applicable or not present in requirements,,25 – 30,Core Platform Trait (High),,"These criteria are essential to platform qualification. If these are missing, the solution likely cannot be considered a platform. Examples: Scope & Reusability, Ecosystem Enablement, Multi-Use-Case Support.",,
+1,Minimal alignment — some potential but mostly specific to a single use/application,,15 – 24,Enabling Trait (Medium) ,,"These traits enhance platform quality but are not standalone proof of a platform. They often indicate maturity, scale, or enterprise readiness. Examples: Developer Experience, Security & Compliance, Cross-Domain Applicability.",,
+2,Partial alignment — reusable or extensible components but not fully ecosystem-ready,,10 – 14,Support Trait (Low),,"Important for operability, maintainability, and ease of adoption, but not central to defining a platform. These are often technical enablers or maintenance features.Examples: Upgradeability & Versioning, Migration Readiness.",,
+3,"Strong alignment — clear platform traits, multi-use, reusable, and scalable architecture",,,,,,,
+,,,,,,,,
+Criterion,Questions/Vocabulary,Score (S: 0-3),Weight (W),Weighted Score (W * S),Reason for the score & Notes,Industry Group specific Examples,"Technology/
+Practice Specific Examples",Sample RFP/BRD Text to Identify Platform Trait
+Scope & Reusability,"Does the solution provide reusable frameworks, services, or APIs that multiple teams/apps can build upon?",,30,0,,"• EV: Telematics API for diagnostics across vehicle models
+• Healthcare: Shared patient identity service for multiple hospital systems","• Microsoft: Azure AD B2C identity platform for 
+all apps
+• Java/Open Source: Spring Boot microservice scaffold published to Nexus
+• Use of Authentication/ UMS service
+• SSO enablement for the users",Platform to serve as a foundation for multiple business apps or services
+Ecosystem Enablement,Can third parties or internal users build on top of the platform (not just consume it)?,,30,0,,"• Banking & Finance: Open Banking hub connecting
+ multiple banks and fintechs
+• GBS/GenAI: AI co-pilot marketplace 
+for customer service partners","• Open Source: Apache Kafka Connect plugin ecosystem
+• Process Automation: UiPath Marketplace for reusable automation components","Partners or clients will develop add-ons, extensions, or apps"
+Multi-Use-Case Support,Can the platform support multiple apps/use cases from the same foundation?,,25,0,,"• Healthcare: Clinical trial portal and telehealth on same platform
+• IoT: Predictive maintenance and fleet tracking on a single IoT platform","• Serverless: Functions framework powering both webhooks and batch jobs (e.g., Azure Functions)","Enable multiple business processes/use cases through one core system
+
+"
+Scalability & Resilience,"Is there a requirement for 
+the platform to scale to support
+ increasing users, applications, or data 
+volumes while maintaining resilience?
+Will the platform scale to thousands of tenants, millions of requests, with built-in HA/failover?",,25,0,,"• EV Charging: Global charging network platform 
+with load balancing , scheduling etc",K8s autoscaling; Load balancing,Expected to support thousands of tenants or millions of requests
+Multi-Tenant / Shared Model,"Does it support secure, isolated use by multiple tenants or customers on shared infra?",,20,0,,Shared data lake across business units,• Kubertnetes - enabling multi-tenant cluster with limiting resource quotas,Support for multiple clients or BUs on a shared infrastructure
+Interoperability,"Does it need to integrate with external or internal systems via APIs, connectors, etc.?",,20,0,,"• Manufacturing: MES integration with SAP and custom factory systems
+• Insurance: Policy system integration with claims platforms","• Logic Apps: Prebuilt connectors to SAP, Salesforce
+• Webhooks: Standard REST hooks for real-time events","Must integrate with ERP, CRM, legacy apps, or external APIs"
+Migration Readiness,Does scope involve infra transformation like cloud migration or replatforming?,,20,0,,On-prem to AWS or Azure,Lift & shift automation; IaC (Terraform),Includes cloud migration or infra modernization scope
+Observability & Telemetry,"Are metrics, logs, traces, and dashboards required for platform visibility?",,20,0,,"• Financial Services: Real-time trading 
+platform telemetry routed to Splunk
+• Renewables: Energy production 
+monitoring on wind-farm platform","• OpenTelemetry: Enabling Distributed tracing across microservices
+• Prometheus & Grafana: Metrics and dashboards","Monitoring, tracing, alerts required for multi-service architecture"
+Extensible APIs & Webhooks,"Does the platform expose APIs, SDKs, or webhooks for extensions or automation?",,20,0,,• Gaming:  webhooks for wallet transactions• Retail: E-commerce platform webhooks for order status updates on mobiles or other devices,OpenAPI: Code generation for client SDKs through use of Gen AI tools,"Expose APIs, SDKs, Webhooks for integrations and extensibility"
+Developer Experience,Is the platform designed for internal or external developers to self-serve efficiently?,,20,0,,"• Process Automation: RPA script recorder and debugger
+IDP portals for self servicing developers",Backstage; GitOps pipelines,Internal Developer Portal (IDP) and CI/CD automation needed
+Security & Compliance,Must the platform provide shared security features for built-on apps?,,20,0,,Central auth for multiple modules,OAuth2; SSO; SOC2 controls,"Built-in security, audit logging, and regulatory compliance"
+Cross-Domain Applicability,Is it usable across different business units or domains?,,15,0,,Analytics CoE serving Finance + HR,Shared ML pipelines or CI/CD templates,Shared services accessible across departments or product lines
+Customer's Business Model,Is the solution aligned with a SaaS/ISV model (sold or licensed for building on top)?,,15,0,,B2B SaaS platform sold to partners,Multi-tenant SaaS architecture,To be offered as SaaS to third-party customers or other teams
+Flexibility & Customization,"Does the system need to 
+be highly flexible and 
+customizable to meet 
+varying customer requirements?",,15,0,,"• Banking: Rule-engine for credit eligibility
+• Healthcare: No-code clinical pathway builder",Power Platform; Feature flags (LaunchDarkly),"Users must customize workflows, UI, or rules per customer"
+"Ease of Use/
+Ease of onboarding","Can new developers/customers 
+get started in minutes via 
+docs, CLI, quickstarts, 
+sandbox?",,15,0,,"• Analytics CoE: Self-service Power BI 
+sandbox with sample datasets
+• Mobile Apps: Developer program 
+for rapid SDK onboarding","• YAML Generators: Project scaffolding for microservices
+• Cloud Templates: ARM/Bicep or Terraform modules","Quick onboarding with sandbox, CLI, starter templates, docs"
+Governance & Policy,"Are controls needed to enforce compliance, access, and usage across tenants?",,15,0,,"• Healthcare: Data access policies with 
+HIPAA audit trails
+• Banking: Role-based compliance for transaction approvals","Azure Policy: Enforce resource 
+compliance",Policy enforcement and access control across modules required
+Upgradeability & Versioning,Does it require backward-compatible upgrades and controlled deprecations?,,10,0,,API lifecycle management in ISVs,Semver; Schema migrations,"Rolling updates, versioning support without downtime needed"
+Abstracts Complexity,Does the platform hide complex infra or workflows for dev/user simplicity?,,10,0,,Infra abstraction layer for dev teams,Kubernetes operators; PaaS interfaces,Hide orchestration complexity from dev teams or end users
+Standardization Enabler,Will it help unify dev practices or architecture across teams?,,10,0,,Shared delivery pipeline for microservices,CI/CD templates; Service mesh policies,Define reusable standards across product or infra teams
+,,,,,,,,
+Total Weighted Score:,,,,0,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+Platform Qualification Interpretation,,,,,,,,
+Total Weighted Score Range,Interpretation,Category,,,,,,
+0 – 300,Minimal platform traits — likely a custom or point application,Application Development,,,,,,
+301 – 600,Some reusable or multi-use elements — consider modularizing further,Application / Modular Product,,,,,,
+601 – 850,"High platform potential — reusable, multi-tenant, some ecosystem signs",Emerging Platform,,,,,,
+> 850,"Fully qualified platform — reusable, extensible, scalable, ecosystem-ready",Enterprise-grade Platform,,,,,,
