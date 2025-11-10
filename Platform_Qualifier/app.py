@@ -1,9 +1,11 @@
 import streamlit as st
+import pandas as pd
 from modules.document_parser import parse_document, chunk_text, RAGRetriever
-from modules.llm_interface import answer_questions_with_rag
-from modules.scoring_engine import compute_scores
+from modules.checklist_loader import load_checklist
+from modules.llm_interface import evaluate_checklist_with_rag
+from modules.scoring_engine import compute_weighted_scores
 from modules.classification import classify_project
-from modules.excel_writer import generate_output_excel
+from modules.excel_writer import generate_result_excel
 
 st.title("Platform Qualification Tool")
 
@@ -21,18 +23,32 @@ if uploaded_file:
     # Step 3: Initialize RAG retriever
     retriever = RAGRetriever(chunks)
 
-    # Step 4: Retrieve relevant chunks for each prompt
+    # Step 4: Load checklist items
+    items = load_checklist()
+
+    # Step 5: Evaluate each checklist item via LLM with RAG
     st.subheader("LLM Analysis")
-    answers = answer_questions_with_rag(retriever)
-    
-    # Step 5: Score answers
-    scores = compute_scores(answers)
+    eval_results = evaluate_checklist_with_rag(retriever, items)
 
-    # Step 6: Classify project
-    category = classify_project(scores)
+    # Step 6: Compute weighted scores
+    rows, total = compute_weighted_scores(items, eval_results)
 
-    # Step 7: Generate Excel output
-    generate_output_excel(answers, scores, category)
+    # Step 7: Classify project based on total
+    category = classify_project(total)
 
+    # Step 8: Display results
+    st.subheader("Checklist Evaluation Results")
+    df = pd.DataFrame(rows)
+    st.dataframe(df)
+    st.metric("Total Weighted Score", f"{total:.0f}")
     st.success(f"Project classified as: {category}")
-    st.download_button("Download Result Excel", "data/Platform_Qualification_Result.xlsx")
+
+    # Step 9: Generate Excel output and provide download
+    out_path = generate_result_excel(rows, total, category)
+    with open(out_path, "rb") as f:
+        st.download_button(
+            label="Download Result Excel",
+            data=f.read(),
+            file_name="Platform_Qualification_Result.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )

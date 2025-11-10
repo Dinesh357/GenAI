@@ -4,3 +4,7 @@ openpyxl
 requests
 pyyaml
 sentence-transformers
+numpy
+scikit-learn
+PyMuPDF
+python-docx

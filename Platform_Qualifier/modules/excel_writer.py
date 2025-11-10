@@ -1,6 +1,7 @@
 
 from openpyxl import load_workbook
 import os
+from openpyxl import Workbook
 
 def generate_output_excel(answers, scores, category):
     wb = load_workbook("data/Platform-Qualification-Checklst.xlsx")
@@ -41,3 +42,31 @@ def generate_output_excel(answers, scores, category):
     output_path = "data/Platform_Qualification_Result.xlsx"
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     wb.save(output_path)
+
+
+def generate_result_excel(rows, total_score, category, output_path: str = "data/Platform_Qualification_Result.xlsx") -> str:
+    """
+    Create a minimal results workbook from computed rows.
+    Rows should contain: criterion, question, score, weight, weighted, justification
+    Returns the saved file path.
+    """
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Results"
+    headers = ["Criterion", "Question", "Score", "Weight", "Weighted Score", "Justification"]
+    ws.append(headers)
+    for r in rows:
+        ws.append([
+            r.get("criterion"),
+            r.get("question"),
+            r.get("score"),
+            r.get("weight"),
+            r.get("weighted"),
+            r.get("justification"),
+        ])
+    ws.append([])
+    ws.append(["Total", None, None, None, total_score, None])
+    ws.append(["Classification", category])
+    wb.save(output_path)
+    return output_path

@@ -4,19 +4,28 @@ import docx
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from io import BytesIO
 
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
 # Parse text from different file types
 def parse_document(file):
-    if file.name.endswith('.pdf'):
-        doc = fitz.open(stream=file.read(), filetype="pdf")
+    name = getattr(file, 'name', '') or ''
+    if name.endswith('.pdf'):
+        data = file.read()
+        doc = fitz.open(stream=data, filetype="pdf")
         text = "".join([page.get_text() for page in doc])
-    elif file.name.endswith('.docx'):
-        doc = docx.Document(file)
+    elif name.endswith('.docx'):
+        # Ensure we read bytes and wrap in BytesIO
+        data = file.read()
+        doc = docx.Document(BytesIO(data))
         text = "".join([para.text for para in doc.paragraphs])
-    elif file.name.endswith('.txt'):
-        text = file.read().decode("utf-8")
+    elif name.endswith('.txt'):
+        data = file.read()
+        try:
+            text = data.decode("utf-8")
+        except Exception:
+            text = data.decode("latin-1", errors='ignore')
     else:
         text = "Unsupported file format"
     return text
