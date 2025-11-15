@@ -1,20 +1,28 @@
 from openpyxl import load_workbook
 from typing import List, Dict, Tuple
+import os
+import time
 
 
-def load_checklist(path: str = "data/Platform-Qualification-Checklst.xlsx",
+def load_checklist(path: str = "data/Platform-Qualification-Checklist.xlsx",
                    sheet_name: str = "Qualification-Checklist") -> List[Dict[str, object]]:
     """
     Load checklist items from the Excel template.
     Expects a header row containing: Criterion | Questions/Vocabulary | Score (S: 0-3) | Weight (W)
     Returns a list of dicts: {criterion, question, weight}
     """
+    start = time.perf_counter()
+    exists = os.path.exists(path)
+    print(f"[Checklist] path={path} exists={exists}", flush=True)
     wb = load_workbook(path)
+    print(f"[Checklist] sheetnames={wb.sheetnames} requested={sheet_name}", flush=True)
     if sheet_name not in wb.sheetnames:
         # fallback to first sheet
         sheet = wb[wb.sheetnames[0]]
+        print(f"[Checklist] using_sheet={sheet.title} (fallback)", flush=True)
     else:
         sheet = wb[sheet_name]
+        print(f"[Checklist] using_sheet={sheet.title}", flush=True)
 
     # Find header row (cell with value 'Criterion')
     header_row_idx = None
@@ -27,6 +35,7 @@ def load_checklist(path: str = "data/Platform-Qualification-Checklst.xlsx",
     if header_row_idx is None:
         # Try default known header at row 12 (CSV shows header on row 12)
         header_row_idx = 12
+    print(f"[Checklist] header_row_idx={header_row_idx}", flush=True)
 
     items: List[Dict[str, object]] = []
     # Columns: A=criterion, B=question, D=weight
@@ -48,4 +57,6 @@ def load_checklist(path: str = "data/Platform-Qualification-Checklst.xlsx",
             "weight": weight,
         })
 
+    elapsed = time.perf_counter() - start
+    print(f"[Checklist] parsed_items={len(items)} elapsed={elapsed:.2f}s", flush=True)
     return items

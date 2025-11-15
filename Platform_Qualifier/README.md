@@ -109,7 +109,7 @@ These steps assume a Linux VM (Ubuntu/Debian-like) with SSH access.
    ```
 
 7. From your local machine, create an SSH tunnel to the VM
-   ```bash
+   ```bash  
    ssh -L 8501:localhost:8501 <vm-user>@<vm-ip>
    ```
    Then open http://localhost:8501 in your local browser.
