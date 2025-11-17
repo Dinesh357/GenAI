@@ -22,17 +22,25 @@ def answer_questions_with_rag(retriever):
     answers = {}
 
     for criterion, template in prompts.items():
-        relevant_chunks = retriever.retrieve(template)
-        context = "\n\n".join(relevant_chunks)
+        relevant_chunks = retriever.retrieve(template, top_k=2)
+        context_parts = []
+        total = 0
+        for ch in relevant_chunks:
+            if total + len(ch) > 6000:
+                context_parts.append(ch[:max(0, 6000 - total)])
+                break
+            context_parts.append(ch)
+            total += len(ch)
+        context = "\n\n".join(context_parts)
         full_prompt = f"{template}\n\nRelevant Context:\n{context}"
         try:
             start = time.perf_counter()
             print(f"[LLM-A] criterion={criterion} ctx_chars={len(context)}", flush=True)
             response = requests.post(OLLAMA_URL, json={
-                "model": "llama2",
+                "model": "mistral:latest",
                 "prompt": full_prompt,
                 "stream": False,
-                "options": {"num_predict": 64, "temperature": 0.2, "num_ctx": 2048},
+                "options": {"num_predict": 32, "temperature": 0.2, "num_ctx": 2048},
                 "keep_alive": "30s"
             })
             elapsed = time.perf_counter() - start
@@ -89,7 +97,7 @@ def _parse_score_and_justification(text: str):
     return score, justification or text.strip()
 
 
-def evaluate_checklist_with_rag(retriever, items, model: str = "llama2"):
+def evaluate_checklist_with_rag(retriever, items, model: str = "mistral:latest"):
     """
     Evaluate each checklist item using RAG and a local LLM.
     items: list of {criterion, question, weight}
@@ -99,8 +107,16 @@ def evaluate_checklist_with_rag(retriever, items, model: str = "llama2"):
     for item in items:
         criterion = item.get("criterion")
         question = item.get("question") or str(criterion)
-        relevant = retriever.retrieve(question)
-        context = "\n\n".join(relevant)
+        relevant = retriever.retrieve(question, top_k=2)
+        context_parts = []
+        total = 0
+        for ch in relevant:
+            if total + len(ch) > 6000:
+                context_parts.append(ch[:max(0, 6000 - total)])
+                break
+            context_parts.append(ch)
+            total += len(ch)
+        context = "\n\n".join(context_parts)
         prompt = _build_prompt(context, question)
         try:
             start = time.perf_counter()
@@ -109,7 +125,7 @@ def evaluate_checklist_with_rag(retriever, items, model: str = "llama2"):
                 "model": model,
                 "prompt": prompt,
                 "stream": False,
-                "options": {"num_predict": 64, "temperature": 0.2, "num_ctx": 2048},
+                "options": {"num_predict": 32, "temperature": 0.2, "num_ctx": 2048},
                 "keep_alive": "30s"
             })
             elapsed = time.perf_counter() - start
